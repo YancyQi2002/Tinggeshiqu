@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>音乐列表-听歌识曲</title>
+	<link rel="stylesheet" href="./css/bootstrap.css">
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center display-3 py-3">听歌识曲</h1>
+		<hr>
+		<a href="/upload" class="btn btn-dark">新增歌曲信息</a>
+		<a href="/history" class="btn btn-dark">历史记录</a>
+		<a href="/" class="btn btn-dark">全部随机</a>
+		<a href="/latestrandom" class="btn btn-dark">最新随机</a>
+		<table class="table table-bordered">
+			<thead class="thead-inverse">
+				<tr>
+					<th>序号</th>
+					<th>歌手</th>
+					<th>歌名</th>
+					<th>音乐</th>
+					<th>更新日期</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="songBox">
+				{{each sounds}}
+                <tr>
+                    <td>{{$index + 1}}</td>
+                    <td data-singer="{{$value.singer}}">***</td>
+                    <td data-songname="{{$value.songname}}">***</td>
+					<td><audio src="/music/{{$value.filename}}" controls></audio></td>
+					<td>{{dateformat($value.addtime, 'yyyy-mm-dd')}}</td>
+					<td>{{$value.isshow == '1' ? '开启' : '屏蔽'}}</td>
+                    <td>
+                        <a href="javascript:;" id="show" class="btn btn-primary">查看答案</a>
+                        <a href="javascript:;" id="ban" data-id="{{@$value._id}}" data-status="{{$value.isshow}}" class="btn btn-warning">屏蔽</a>
+                        <a href="javascript:;" data-id="{{@$value._id}}" class="btn btn-danger delete">删除</a>
+                    </td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+	<script src="/js/jquery.min.js"></script>
+	<script>
+		// 查看答案功能
+		$('#songBox').on('click', '#show', function(){
+			var $singer = $(this).parent().siblings().eq(1);
+			$singer.text($singer.text() == '***' ? $singer.attr('data-singer') : '***');
+			var $songname = $(this).parent().siblings().eq(2);
+			$songname.text($songname.text() == '***' ? $songname.attr('data-songname') : '***');
+		});
+
+		// 屏蔽、开启音乐
+		$('#songBox').on('click', '#ban', function(){
+			var status = $(this).attr('data-status') == '1' ? '0' : '1';
+			var id = $(this).attr('data-id');
+			$.ajax({
+				type: 'get',
+				data: {id, status},
+				url: '/ban',
+				success: (res) => {
+					// console.log(res);
+					$(this).attr('data-status', res.isshow);
+					// 修改按钮文字提示
+					$(this).text(res.isshow == '1' ? '屏蔽' : '开启');
+					// 修改音乐列表状态
+					$(this).parent().prev().text(res.isshow == '1' ? '开启' : '屏蔽');
+					// 修改列表背景色
+					if(res.isshow == '1'){
+						// 去掉背景色
+						$(this).parent().parent().removeClass('bg-success');
+					} else {
+						// 加上绿色成功的背景
+						$(this).parent().parent().addClass('bg-success');
+					}
+				}
+			});
+		});
+		// 删除音乐功能
+		$('#songBox').on('click', '.delete', function(){
+			if(confirm('您确定要删除该歌曲吗?')){
+				$.ajax({
+					type: 'get',
+					data: {id:$(this).attr('data-id')},
+					url: '/delete',
+					success: () => {
+						$(this).parent().parent().remove();
+					}
+				});
+			}
+		})
+	</script>
+</body>
+</html>

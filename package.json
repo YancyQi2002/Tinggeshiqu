@@ -1,0 +1,21 @@
+{
+  "name": "tinggeshiqu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "art-template": "^4.13.2",
+    "dateformat": "^3.0.3",
+    "express": "^4.17.1",
+    "express-art-template": "^1.0.1",
+    "formidable": "^1.2.2",
+    "mongoose": "^5.9.28",
+    "mongoose-query-random": "^1.0.1"
+  }
+}
