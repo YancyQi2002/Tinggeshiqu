@@ -19,6 +19,7 @@
     "mongoose-query-random": "^1.0.1"
   },
   "devDependencies": {
-    "bl": ">=2.2.1"
+    "bl": ">=2.2.1",
+    "mquery": ">=3.2.3"
   }
 }
