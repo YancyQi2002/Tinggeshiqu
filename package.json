@@ -17,5 +17,8 @@
     "formidable": "^1.2.2",
     "mongoose": "^5.9.28",
     "mongoose-query-random": "^1.0.1"
+  },
+  "devDependencies": {
+    "bl": ">=2.2.1"
   }
 }
